@@ -1,0 +1,34 @@
+---
+- name: Install lighttpd
+  apt: name={{ item }} state=present
+  with_items:
+    - lighttpd
+    - lighttpd-mod-magnet
+
+- name: Create the lua scripts directory
+  file: path=/etc/lighttpd/lua state=directory mode=0755
+
+- name: Add the LUA proxy script
+  copy: src=devpi.lua dest=/etc/lighttpd/lua/devpi.lua 
+  notify: restart lighttpd
+
+- name: Add devpi as a lighttpd site
+  template: >
+    src=lighttpd-devpi.conf.j2
+    dest=/etc/lighttpd/conf-available/devpi-site.conf
+  notify: restart lighttpd
+
+- name: Enable devpi in lighttpd
+  file: src=/etc/lighttpd/conf-available/devpi-site.conf
+        dest=/etc/lighttpd/conf-enabled/devpi-site.conf
+        state=link
+  notify: restart lighttpd
+
+#- name: Setup lighttpd htpasswd
+  #template: >-
+  #  src=htpasswd.j2
+  #  dest=/etc/lighttpd/conf.d/pypi-htpasswd
+  #  mode=644
+  #  owner=root
+  #  group=root
+  #notify: restart lighttpd

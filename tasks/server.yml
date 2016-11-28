@@ -23,13 +23,15 @@
     virtualenv={{ devpi_install_dir }}
   with_items:
     - devpi-server
+    - devpi-web
+    - devpi
     - eventlet
   notify: restart devpi
 
 - name: writing supervisor script
   template: >
     src=supervisor-devpi.conf.j2
-    dest={{ supervisord_additional_conf_dir }}/devpi.conf
+    dest={{ supervisord_additional_conf_dir }}/{{ devpi_supervisor_conf }}
     owner=devpi
     group=devpi
     mode=0644

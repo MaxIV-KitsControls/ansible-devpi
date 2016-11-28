@@ -1,5 +1,8 @@
 [program:devpi-server]
-command=/var/lib/devpi/bin/devpi-server --port 3141 --serverdir /var/lib/devpi/devpi-server/data
+command={{devpi_install_dir}}/bin/devpi-server --port 3141 --serverdir {{ devpi_data_dir }} 
+{%- if devpi_proxy %}
+    --outside-url {{ devpi_proxy }}
+{% endif -%} 
 process_name=%(program_name)s
 numprocs=1
 numprocs_start=0

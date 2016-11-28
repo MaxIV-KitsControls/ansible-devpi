@@ -14,3 +14,7 @@
 
 - name: restart nginx
   service: name=nginx state=restarted
+
+- name: restart lighttpd
+  #service: name=lighttpd state=restarted
+  debug: msg="Restart lighttpd by hand"
